@@ -63,15 +63,32 @@ def add_poi() -> None:
     with open(FILENAME, "a") as file:
         file.write(f"{id}, {name}, {type}, {desc}")
 
+def linear_search_poi(id: int, lines: list, useLineNum: int = False):
+    for lineNum, line in enumerate(lines):
+
+        if lineNum == id: # skips this as it was already tried in the main search
+            continue
+
+        if id == parse(line)["id"]:
+            if useLineNum:
+                return lineNum
+            else:
+                return line.rstrip("\n")
+    return -1
+
 def search_poi(id: int, useLineNum: int = False):
     with open(FILENAME, "r") as file:
-        for lineNum, line in enumerate(file.readlines()):
-            if id == parse(line)["id"]:
-                if useLineNum:
-                    return lineNum
-                else:
-                    return line.rstrip("\n")
-        return -1
+        lines = file.readlines()
+    try:
+        if parse(lines[id])["id"] == id:
+            if useLineNum:
+                return id
+            else:
+                return lines[id].rstrip("\n")
+        else:
+            raise IndexError
+    except IndexError:
+        return linear_search_poi(id, lines, useLineNum)  # tries a linear search as a fallback
 
 def user_search_poi() -> None:
     id = get_input("Enter the POIs ID", numOnly=True)
@@ -99,7 +116,7 @@ def user_search_poi_name() -> None:
         for i in out:
             print(i)
 
-def list_sort(e):
+def list_sort(e: str) -> str:
     return parse(e)["name"].lower()
 
 def list_poi() -> None:
@@ -111,15 +128,14 @@ def list_poi() -> None:
             line = line.rstrip("\n")
             print(line)
 
-def delete_line(lineNum: int, file:str = FILENAME) -> None:
+def delete_line(lineNum: int, file: str = FILENAME) -> None:
     with open(file, "r+") as file:
         lines = file.readlines()
         file.seek(0)
         file.truncate()
 
-        for number, line in enumerate(lines):
-            if number != lineNum:
-                file.write(line)
+        for line in lines[:lineNum] + lines[lineNum+1:]:
+            file.write(line)
 
 def user_delete_poi():
     id = get_input("Enter a poi ID to delete", numOnly=True, numMin=0)
