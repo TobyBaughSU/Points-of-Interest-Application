@@ -177,6 +177,7 @@ def disp_options():
     print("0) Exit\n1) Add POI\n2) Search POI\n3) List all POIs\n4) Search POI name\n5) Delete POI\n6) Make enquiry\n7) Answer enquiry")
     choice = get_input("Enter option", numOnly=True, numMin=0, numMax=8)
     return choice
+
 def run():
     print("POI application")
     choice = None

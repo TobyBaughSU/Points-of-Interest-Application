@@ -11,17 +11,9 @@ class TreeNode:
         else:
             value = self.key(value)
             value2 = self.key(self.value)
-        for i in range(min(len(value), len(value2))):
-            if ord(value[i]) > ord(value2[i]):
-                return False
-            elif ord(value[i]) < ord(value2[i]):
-                return True
-        if len(value) < len(value2):
-            return True
-        return False
+        return value < value2
 
     def insert(self, value: str, key=None):
-        # if value < self.value:
         if self.smaller(value):
             if self.left is None:
                 self.left = TreeNode(value, key)
@@ -62,6 +54,7 @@ def tree_sort(e, key=None):
     tree.insert(*e, key=key)
     return tree.list()
 
+# testing
 if __name__ == "__main__":
     tree = BinaryTree()
     tree.insert("aa", "2", "ab", "n", "aaa", "a")
